@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verificar Digitação</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Verificador de Digitação</h1>
+      <input type="text" id="campoPesquisa" placeholder="Digite algo aqui..." />
+      <p id="statusMessage">Digite algo para começar...</p>
+    </div>
+
+    <script>
+      const campoPesquisa = document.getElementById("campoPesquisa");
+      const statusMessage = document.getElementById("statusMessage");
+
+      // Variável para controlar se o usuário está digitando
+      let isTyping = false;
+      let typingTimeout;
+
+      // Função para atualizar o status na tela
+      function updateStatus() {
+        if (isTyping) {
+          statusMessage.textContent =
+            "Você está digitando no campo de pesquisa.";
+          statusMessage.className = "typing";
+        } else {
+          statusMessage.textContent =
+            "Você NÃO está digitando no campo de pesquisa.";
+          statusMessage.className = "not-typing";
+        }
+      }
+
+      // Evento 'input' detecta qualquer mudança no campo
+      campoPesquisa.addEventListener("input", () => {
+        isTyping = true;
+        updateStatus(); // Atualiza imediatamente
+
+        // Limpa o timeout anterior
+        clearTimeout(typingTimeout);
+
+        // Define novo timeout para detectar quando parou de digitar
+        typingTimeout = setTimeout(() => {
+          isTyping = false;
+          updateStatus(); // Atualiza quando parar de digitar
+        }, 500);
+      });
+
+      // Evento 'blur' detecta quando o campo perde o foco
+      campoPesquisa.addEventListener("blur", () => {
+        isTyping = false;
+        clearTimeout(typingTimeout);
+        updateStatus(); // Atualiza quando perder o foco
+      });
+
+      // Evento 'focus' detecta quando o campo ganha foco
+      campoPesquisa.addEventListener("focus", () => {
+        if (campoPesquisa.value.length > 0) {
+          updateStatus();
+        }
+      });
+    </script>
+  </body>
+</html>
